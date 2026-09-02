@@ -6,3 +6,6 @@ sky:
     database: sky_take_out
     username: root
     password: root
+  upload:
+    path: C:/Users/lucky/Desktop/后端项目/sky-take-out/uploads/
+    base-url: http://localhost:8080
