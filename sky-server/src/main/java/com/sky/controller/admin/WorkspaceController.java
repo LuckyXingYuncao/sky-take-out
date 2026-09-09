@@ -42,7 +42,7 @@ public class WorkspaceController {
      * 查询菜品总览
      * @return
      */
-    @GetMapping("/dishOverview")
+    @GetMapping("/overviewDishes")
     @ApiOperation("查询菜品总览")
     public Result<DishOverViewVO> getDishOverview() {
         log.info("查询菜品总览");
@@ -54,7 +54,7 @@ public class WorkspaceController {
      * 查询套餐总览
      * @return
      */
-    @GetMapping("/setmealOverview")
+    @GetMapping("/overviewSetmeals")
     @ApiOperation("查询套餐总览")
     public Result<SetmealOverViewVO> getSetmealOverview() {
         log.info("查询套餐总览");
@@ -66,7 +66,7 @@ public class WorkspaceController {
      * 查询订单管理数据
      * @return
      */
-    @GetMapping("/orderOverview")
+    @GetMapping("/overviewOrders")
     @ApiOperation("查询订单管理数据")
     public Result<OrderOverViewVO> getOrderOverview() {
         log.info("查询订单管理数据");

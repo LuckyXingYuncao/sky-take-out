@@ -49,9 +49,9 @@ public class ReportController {
      * @param end
      * @return
      */
-    @GetMapping("/orderStatistics")
+    @GetMapping("/ordersStatistics")
     @ApiOperation("订单统计")
-    public Result<OrderReportVO> orderStatistics(
+    public Result<OrderReportVO> ordersStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         log.info("订单统计：begin={}, end={}", begin, end);
