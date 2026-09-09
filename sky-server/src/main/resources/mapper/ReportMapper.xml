@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.ReportMapper">
+
+    <select id="getTurnoverStatistics" resultType="java.util.HashMap">
+        SELECT
+            DATE(order_time) AS orderDate,
+            IFNULL(SUM(amount), 0) AS turnover
+        FROM orders
+        WHERE status = 5
+        AND order_time BETWEEN #{begin} AND #{end}
+        GROUP BY DATE(order_time)
+        ORDER BY orderDate
+    </select>
+
+    <select id="getOrderStatistics" resultType="java.util.HashMap">
+        SELECT
+            DATE(order_time) AS orderDate,
+            COUNT(*) AS totalOrderCount,
+            IFNULL(SUM(CASE WHEN status = 5 THEN 1 ELSE 0 END), 0) AS validOrderCount
+        FROM orders
+        WHERE order_time BETWEEN #{begin} AND #{end}
+        GROUP BY DATE(order_time)
+        ORDER BY orderDate
+    </select>
+
+    <select id="getUserStatistics" resultType="java.util.HashMap">
+        SELECT
+            DATE(create_time) AS userDate,
+            COUNT(*) AS totalUserCount,
+            IFNULL(SUM(CASE WHEN DATE(create_time) = DATE(#{begin}) THEN 1 ELSE 0 END), 0) AS newUserCount
+        FROM `user`
+        WHERE create_time &lt;= #{end}
+        GROUP BY DATE(create_time)
+        ORDER BY userDate
+    </select>
+
+    <select id="getTop10" resultType="com.sky.dto.GoodsSalesDTO">
+        SELECT
+            od.name AS name,
+            IFNULL(SUM(od.number), 0) AS number
+        FROM order_detail od
+        LEFT JOIN orders o ON od.order_id = o.id
+        WHERE o.status = 5
+        AND o.order_time BETWEEN #{begin} AND #{end}
+        GROUP BY od.name
+        ORDER BY number DESC
+        LIMIT 10
+    </select>
+
+</mapper>

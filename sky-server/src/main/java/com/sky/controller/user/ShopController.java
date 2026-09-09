@@ -1,4 +1,4 @@
-package com.sky.controller.admin;
+package com.sky.controller.user;
 
 import com.sky.result.Result;
 import io.swagger.annotations.Api;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 店铺操作
  */
-@RestController("adminShopController")
-@RequestMapping("/admin/shop")
+@RestController("userShopController")
+@RequestMapping("/user/shop")
 @Slf4j
 @Api(tags = "店铺操作接口")
 public class ShopController {
@@ -35,16 +35,4 @@ public class ShopController {
         return Result.success(shopStatus);
     }
 
-    /**
-     * 设置营业状态
-     * @param status 1:营业中 0:打烊
-     * @return
-     */
-    @PutMapping("/{status}")
-    @ApiOperation("设置营业状态")
-    public Result<String> setStatus(@PathVariable Integer status) {
-        log.info("设置营业状态：{}", status == 1 ? "营业中" : "打烊");
-        stringRedisTemplate.opsForValue().set(SHOP_STATUS_KEY, String.valueOf(status));
-        return Result.success();
-    }
 }
