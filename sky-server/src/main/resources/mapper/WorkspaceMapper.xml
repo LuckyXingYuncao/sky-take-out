@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.WorkspaceMapper">
+
+    <select id="getBusinessData" resultType="java.util.HashMap">
+        SELECT
+            IFNULL(SUM(amount), 0) AS turnover,
+            COUNT(*) AS validOrderCount,
+            IFNULL(
+                ROUND(
+                    COUNT(*) * 1.0 / (
+                        SELECT COUNT(*) FROM orders
+                        WHERE order_time BETWEEN #{begin} AND #{end}
+                    ), 2
+                ), 0
+            ) AS orderCompletionRate,
+            IFNULL(
+                ROUND(
+                    IFNULL(SUM(amount), 0) * 1.0 / COUNT(*), 2
+                ), 0
+            ) AS unitPrice,
+            IFNULL(
+                (SELECT COUNT(*) FROM user WHERE create_time BETWEEN #{begin} AND #{end}), 0
+            ) AS newUsers
+        FROM orders
+        WHERE status = 5
+        AND order_time BETWEEN #{begin} AND #{end}
+    </select>
+
+    <select id="getDishOverview" resultType="java.util.HashMap">
+        SELECT
+            IFNULL(SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END), 0) AS sold,
+            IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) AS discontinued
+        FROM dish
+    </select>
+
+    <select id="getSetmealOverview" resultType="java.util.HashMap">
+        SELECT
+            IFNULL(SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END), 0) AS sold,
+            IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) AS discontinued
+        FROM setmeal
+    </select>
+
+    <select id="getOrderOverview" resultType="java.util.HashMap">
+        SELECT
+            IFNULL(SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END), 0) AS waitingOrders,
+            IFNULL(SUM(CASE WHEN status = 4 THEN 1 ELSE 0 END), 0) AS deliveredOrders,
+            IFNULL(SUM(CASE WHEN status = 5 THEN 1 ELSE 0 END), 0) AS completedOrders,
+            IFNULL(SUM(CASE WHEN status = 6 THEN 1 ELSE 0 END), 0) AS cancelledOrders,
+            COUNT(*) AS allOrders
+        FROM orders
+    </select>
+</mapper>
