@@ -24,7 +24,7 @@ public class ShopController {
 
     /**
      * 获取营业状态
-     * @return
+     * @return 营业状态 1:营业中 0:打烊
      */
     @GetMapping("/status")
     @ApiOperation("获取营业状态")
@@ -38,7 +38,7 @@ public class ShopController {
     /**
      * 设置营业状态
      * @param status 1:营业中 0:打烊
-     * @return
+     * @return 成功提示
      */
     @PutMapping("/{status}")
     @ApiOperation("设置营业状态")
