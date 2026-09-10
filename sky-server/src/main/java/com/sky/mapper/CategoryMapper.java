@@ -62,6 +62,14 @@ public interface CategoryMapper {
     List<Category> getByType(Integer type);
 
     /**
+     * 根据类型查询启用的分类(用户端)
+     * @param type
+     * @return
+     */
+    @Select("select * from category where type = #{type} and status = 1 order by sort asc")
+    List<Category> listByType(Integer type);
+
+    /**
      * 根据ID删除分类
      * @param id
      */

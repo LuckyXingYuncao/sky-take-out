@@ -54,4 +54,11 @@ public interface CategoryService {
      * @return
      */
     List<Category> getByType(Integer type);
+
+    /**
+     * 根据类型查询启用的分类(用户端)
+     * @param type
+     * @return
+     */
+    List<Category> listByType(Integer type);
 }

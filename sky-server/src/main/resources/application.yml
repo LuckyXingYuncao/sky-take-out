@@ -39,6 +39,3 @@ sky:
     user-secret-key: itheima
     user-ttl: 7200000
     user-token-name: authentication
-  wechat:
-    appid: ${WECHAT_APPID}
-    secret: ${WECHAT_SECRET}

@@ -93,6 +93,14 @@ public interface DishMapper {
     List<Dish> getByCategoryId(Long categoryId);
 
     /**
+     * 根据分类ID查询启用的菜品(用户端)
+     * @param categoryId
+     * @return
+     */
+    @Select("select * from dish where category_id = #{categoryId} and status = 1")
+    List<Dish> listByCategoryId(Long categoryId);
+
+    /**
      * 统计关联了指定菜品的套餐数量
      * @param dishIds
      * @return
