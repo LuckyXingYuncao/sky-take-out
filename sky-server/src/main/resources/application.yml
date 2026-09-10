@@ -40,5 +40,5 @@ sky:
     user-ttl: 7200000
     user-token-name: authentication
   wechat:
-    app-id: ${sky.wechat.app-id}
-    app-secret: ${sky.wechat.app-secret}
+    appid: ${WECHAT_APPID}
+    secret: ${WECHAT_SECRET}

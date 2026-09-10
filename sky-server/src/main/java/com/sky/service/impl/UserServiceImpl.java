@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
         log.info("微信用户登录，code：{}", code);
 
         //调用微信接口，获取openid
+        log.info("调用微信接口，appid：{}", weChatProperties.getAppid());
         String json = restTemplate.getForObject(WX_LOGIN_URL, String.class,
                 weChatProperties.getAppid(),
                 weChatProperties.getSecret(),
