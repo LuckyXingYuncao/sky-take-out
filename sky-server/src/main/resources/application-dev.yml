@@ -9,3 +9,6 @@ sky:
   upload:
     path: C:/Users/lucky/Desktop/后端项目/sky-take-out/uploads/
     base-url: http://localhost:8080
+  wechat:
+    appid: wx
+    secret: wx

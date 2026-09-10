@@ -5,3 +5,7 @@
 *Test.java
 **/test/
 uploads/
+# 日志文件
+*.log
+logs/
+**/logs/
