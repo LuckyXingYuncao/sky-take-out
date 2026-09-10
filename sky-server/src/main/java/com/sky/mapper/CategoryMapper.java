@@ -66,8 +66,7 @@ public interface CategoryMapper {
      * @param type
      * @return
      */
-    @Select("select * from category where type = #{type} and status = 1 order by sort asc")
-    List<Category> listByType(Integer type);
+    List<Category> listByType(@Param("type") Integer type);
 
     /**
      * 根据ID删除分类
