@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="com.sky.entity.User">
+        <id column="id" property="id"/>
+        <result column="openid" property="openid"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="sex" property="sex"/>
+        <result column="id_number" property="idNumber"/>
+        <result column="avatar" property="avatar"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="getByOpenid" resultMap="userResultMap">
+        select * from user where openid = #{openid}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into user (openid, name, phone, sex, id_number, avatar, create_time)
+        values (#{openid}, #{name}, #{phone}, #{sex}, #{idNumber}, #{avatar}, #{createTime})
+    </insert>
+
+    <select id="getById" resultMap="userResultMap">
+        select * from user where id = #{id}
+    </select>
+
+    <update id="update" parameterType="com.sky.entity.User">
+        update user
+        <set>
+            <if test="openid != null">openid = #{openid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="idNumber != null">id_number = #{idNumber},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
