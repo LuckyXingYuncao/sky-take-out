@@ -16,6 +16,8 @@ import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"workspace:businessData", "workspace:orderOverview", "order:statistics"}, allEntries = true)
     public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
         log.info("接单：{}", ordersConfirmDTO);
         Orders orders = orderMapper.getById(ordersConfirmDTO.getId());
@@ -78,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"workspace:businessData", "workspace:orderOverview", "order:statistics"}, allEntries = true)
     public void rejection(OrdersRejectionDTO ordersRejectionDTO) {
         log.info("拒单：{}", ordersRejectionDTO);
         Orders orders = orderMapper.getById(ordersRejectionDTO.getId());
@@ -98,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"workspace:businessData", "workspace:orderOverview", "order:statistics"}, allEntries = true)
     public void cancel(OrdersCancelDTO ordersCancelDTO) {
         log.info("商家取消订单：{}", ordersCancelDTO);
         Orders orders = orderMapper.getById(ordersCancelDTO.getId());
@@ -115,6 +120,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"workspace:businessData", "workspace:orderOverview", "order:statistics"}, allEntries = true)
     public void delivery(Long id) {
         log.info("派送订单：id={}", id);
         Orders orders = orderMapper.getById(id);
@@ -133,6 +139,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"workspace:businessData", "workspace:orderOverview", "order:statistics"}, allEntries = true)
     public void complete(Long id) {
         log.info("完成订单：id={}", id);
         Orders orders = orderMapper.getById(id);
@@ -151,6 +158,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Cacheable(value = "order:statistics", key = "'current'")
     public OrderStatisticsVO getStatistics() {
         log.info("各个状态订单数量统计");
         List<Orders> list = orderMapper.getStatistics();

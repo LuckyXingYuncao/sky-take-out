@@ -12,6 +12,8 @@ import com.sky.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
+    @CacheEvict(value = {"user:category", "user:dish", "user:setmeal"}, allEntries = true)
     public void save(CategoryDTO categoryDTO) {
         log.info("新增分类：{}", categoryDTO);
         Category category = new Category();
@@ -51,6 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CacheEvict(value = {"user:category", "user:dish", "user:setmeal"}, allEntries = true)
     public void startOrStop(Integer status, Long id) {
         log.info("启用/禁用分类：id={}, status={}", id, status);
         Category category = Category.builder()
@@ -68,6 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CacheEvict(value = {"user:category", "user:dish", "user:setmeal"}, allEntries = true)
     public void update(CategoryDTO categoryDTO) {
         log.info("修改分类信息：{}", categoryDTO);
         Category category = new Category();
@@ -76,6 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CacheEvict(value = {"user:category", "user:dish", "user:setmeal"}, allEntries = true)
     public void deleteById(Long id) {
         log.info("删除分类：id={}", id);
         categoryMapper.deleteById(id);
@@ -89,6 +95,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "user:category", key = "#type != null ? #type : 'all'", unless = "#result.isEmpty()")
     public List<Category> listByType(Integer type) {
         log.info("用户端根据类型查询启用的分类：type={}", type);
         List<Category> categoryList = categoryMapper.listByType(type);

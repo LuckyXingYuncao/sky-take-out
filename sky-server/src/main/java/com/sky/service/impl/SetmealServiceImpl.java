@@ -14,6 +14,8 @@ import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"user:setmeal", "workspace:setmealOverview"}, allEntries = true)
     public void save(SetmealDTO setmealDTO) {
         log.info("新增套餐：{}", setmealDTO);
         Setmeal setmeal = new Setmeal();
@@ -64,6 +67,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Override
+    @CacheEvict(value = {"user:setmeal", "workspace:setmealOverview"}, allEntries = true)
     public void startOrStop(Integer status, Long id) {
         log.info("套餐起售停售：id={}, status={}", id, status);
         Setmeal setmeal = Setmeal.builder()
@@ -74,6 +78,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Override
+    @Cacheable(value = "user:setmeal", key = "#id", unless = "#result == null")
     public SetmealVO getById(Long id) {
         log.info("根据ID查询套餐：id={}", id);
         Setmeal setmeal = setmealMapper.getById(id);
@@ -89,6 +94,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"user:setmeal", "workspace:setmealOverview"}, allEntries = true)
     public void update(SetmealDTO setmealDTO) {
         log.info("修改套餐：{}", setmealDTO);
         Setmeal setmeal = new Setmeal();
@@ -108,6 +114,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"user:setmeal", "workspace:setmealOverview"}, allEntries = true)
     public void deleteBatch(List<Long> ids) {
         log.info("批量删除套餐：ids={}", ids);
         setmealMapper.deleteDishesBySetmealIds(ids);
@@ -116,6 +123,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Override
+    @Cacheable(value = "user:setmeal", key = "#categoryId != null ? #categoryId : 'all'", unless = "#result.isEmpty()")
     public List<SetmealVO> listByCategoryId(Long categoryId) {
         log.info("用户端根据分类ID查询套餐，categoryId={}", categoryId);
         List<Setmeal> setmealList = setmealMapper.listByCategoryId(categoryId);

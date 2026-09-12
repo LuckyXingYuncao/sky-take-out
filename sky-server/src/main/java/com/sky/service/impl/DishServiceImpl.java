@@ -16,6 +16,8 @@ import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"user:dish", "user:setmeal", "workspace:dishOverview"}, allEntries = true)
     public void save(DishDTO dishDTO) {
         log.info("新增菜品：{}", dishDTO);
         Dish dish = new Dish();
@@ -66,6 +69,7 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    @CacheEvict(value = {"user:dish", "user:setmeal", "workspace:dishOverview"}, allEntries = true)
     public void startOrStop(Integer status, Long id) {
         log.info("菜品起售停售：id={}, status={}", id, status);
         Dish dish = Dish.builder()
@@ -91,6 +95,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"user:dish", "user:setmeal", "workspace:dishOverview"}, allEntries = true)
     public void update(DishDTO dishDTO) {
         log.info("修改菜品：{}", dishDTO);
         Dish dish = new Dish();
@@ -110,6 +115,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"user:dish", "user:setmeal", "workspace:dishOverview"}, allEntries = true)
     public void deleteBatch(List<Long> ids) {
         log.info("批量删除菜品：ids={}", ids);
         for (Long id : ids) {
@@ -134,6 +140,7 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    @Cacheable(value = "user:dish", key = "#categoryId != null ? #categoryId : 'all'", unless = "#result.isEmpty()")
     public List<DishVO> listByCategoryId(Long categoryId) {
         log.info("用户端根据分类ID查询启用的菜品：categoryId={}", categoryId);
         List<Dish> dishList = dishMapper.listByCategoryId(categoryId);

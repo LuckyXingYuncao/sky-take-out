@@ -8,6 +8,7 @@ import com.sky.vo.OrderOverViewVO;
 import com.sky.vo.SetmealOverViewVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     private WorkspaceMapper workspaceMapper;
 
     @Override
+    @Cacheable(value = "workspace:businessData", key = "'today'")
     public BusinessDataVO getBusinessData() {
         log.info("查询今日运营数据");
         LocalDateTime begin = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
@@ -46,6 +48,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
+    @Cacheable(value = "workspace:dishOverview", key = "'current'")
     public DishOverViewVO getDishOverview() {
         log.info("查询菜品总览");
         Map<String, Object> map = workspaceMapper.getDishOverview();
@@ -60,6 +63,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
+    @Cacheable(value = "workspace:setmealOverview", key = "'current'")
     public SetmealOverViewVO getSetmealOverview() {
         log.info("查询套餐总览");
         Map<String, Object> map = workspaceMapper.getSetmealOverview();
@@ -74,6 +78,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
+    @Cacheable(value = "workspace:orderOverview", key = "'current'")
     public OrderOverViewVO getOrderOverview() {
         log.info("查询订单管理数据");
         Map<String, Object> map = workspaceMapper.getOrderOverview();
