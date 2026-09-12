@@ -33,6 +33,8 @@
         update orders
         <set>
             <if test="status != null">status = #{status},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="payMethod != null">pay_method = #{payMethod},</if>
             <if test="cancelReason != null">cancel_reason = #{cancelReason},</if>
             <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
             <if test="rejectionReason != null">rejection_reason = #{rejectionReason},</if>
@@ -48,5 +50,13 @@
         where status in (2, 3, 4)
         group by status
     </select>
+
+    <insert id="insertOrderDetailBatch" parameterType="list">
+        insert into order_detail (name, order_id, dish_id, setmeal_id, dish_flavor, number, amount, image)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name}, #{item.orderId}, #{item.dishId}, #{item.setmealId}, #{item.dishFlavor}, #{item.number}, #{item.amount}, #{item.image})
+        </foreach>
+    </insert>
 
 </mapper>
