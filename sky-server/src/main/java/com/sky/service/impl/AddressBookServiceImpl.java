@@ -23,8 +23,11 @@ public class AddressBookServiceImpl implements AddressBookService {
     public void save(AddressBook addressBook) {
         Long userId = BaseContext.getCurrentId();
         addressBook.setUserId(userId);
+        if (addressBook.getIsDefault() == null) {
+            addressBook.setIsDefault(0);
+        }
 
-        if (addressBook.getIsDefault() != null && addressBook.getIsDefault() == 1) {
+        if (addressBook.getIsDefault() == 1) {
             addressBookMapper.clearDefaultByUserId(userId);
         }
 

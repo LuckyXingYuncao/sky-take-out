@@ -123,7 +123,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Override
-    @Cacheable(value = "user:setmeal", key = "#categoryId != null ? #categoryId : 'all'", unless = "#result.isEmpty()")
+    @Cacheable(value = "user:setmeal", key = "#categoryId", unless = "#result.isEmpty()")
     public List<SetmealVO> listByCategoryId(Long categoryId) {
         log.info("用户端根据分类ID查询套餐，categoryId={}", categoryId);
         List<Setmeal> setmealList = setmealMapper.listByCategoryId(categoryId);
