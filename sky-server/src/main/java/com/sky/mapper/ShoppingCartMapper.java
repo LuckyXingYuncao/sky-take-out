@@ -24,7 +24,15 @@ public interface ShoppingCartMapper {
     @Select("select * from shopping_cart where user_id = #{userId}")
     List<ShoppingCart> listByUserId(Long userId);
 
-    @Select("select * from shopping_cart where user_id = #{userId} and dish_id = #{dishId} and setmeal_id = #{setmealId} and dish_flavor = #{dishFlavor}")
+    @Select("<script>" +
+            "select * from shopping_cart where user_id = #{userId}" +
+            "<if test='dishId != null'> and dish_id = #{dishId}</if>" +
+            "<if test='dishId == null'> and dish_id is null</if>" +
+            "<if test='setmealId != null'> and setmeal_id = #{setmealId}</if>" +
+            "<if test='setmealId == null'> and setmeal_id is null</if>" +
+            "<if test='dishFlavor != null'> and dish_flavor = #{dishFlavor}</if>" +
+            "<if test='dishFlavor == null'> and (dish_flavor is null or dish_flavor = '')</if>" +
+            "</script>")
     ShoppingCart getByCondition(ShoppingCart shoppingCart);
 
     @Delete("delete from shopping_cart where user_id = #{userId}")
