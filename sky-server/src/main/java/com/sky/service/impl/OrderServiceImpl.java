@@ -25,6 +25,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class OrderServiceImpl implements OrderService {
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
     private AddressBookMapper addressBookMapper;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Override
     public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
@@ -297,6 +300,8 @@ public class OrderServiceImpl implements OrderService {
                 .packageStr("prepay_id=mock_prepay_id")
                 .build();
         log.info("订单支付：订单号={}，支付方式={}", ordersPaymentDTO.getOrderNumber(), ordersPaymentDTO.getPayMethod());
+        webSocketServer.sendToAllClient("{\"type\":\"newOrder\",\"message\":\"您有新的订单，请及时处理\",\"orderNumber\":\""
+                + ordersPaymentDTO.getOrderNumber() + "\"}");
         return paymentVO;
     }
 
