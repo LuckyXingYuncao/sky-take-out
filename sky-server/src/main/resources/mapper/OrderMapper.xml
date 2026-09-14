@@ -59,4 +59,16 @@
         </foreach>
     </insert>
 
+    <select id="getByStatusAndOrderTimeBefore" resultType="com.sky.entity.Orders">
+        select * from orders
+        where status = #{status}
+        and order_time &lt; #{time}
+    </select>
+
+    <select id="getByStatusAndEstimatedDeliveryTimeBefore" resultType="com.sky.entity.Orders">
+        select * from orders
+        where status = #{status}
+        and estimated_delivery_time &lt; #{time}
+    </select>
+
 </mapper>

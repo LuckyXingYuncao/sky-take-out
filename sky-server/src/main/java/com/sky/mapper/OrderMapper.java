@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -36,4 +37,8 @@ public interface OrderMapper {
 
     @Select("select * from order_detail where order_id = #{orderId}")
     List<OrderDetail> getOrderDetailListByOrderId(Long orderId);
+
+    List<Orders> getByStatusAndOrderTimeBefore(@Param("status") Integer status, @Param("time") LocalDateTime time);
+
+    List<Orders> getByStatusAndEstimatedDeliveryTimeBefore(@Param("status") Integer status, @Param("time") LocalDateTime time);
 }
