@@ -334,7 +334,7 @@ public class OrderServiceImpl implements OrderService {
         if (orders == null) {
             throw new RuntimeException(MessageConstant.ORDER_NOT_FOUND);
         }
-        log.info("用户催单，订单ID={}", id);
+        webSocketServer.sendToAllClient("{\"type\":\"reminder\",\"message\":\"用户催单啦，请尽快处理\",\"orderId\":" + id + "}");
     }
 
     @Override
