@@ -7,6 +7,7 @@ import com.sky.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,6 +23,11 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtProperties jwtProperties;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    private static final String LOGIN_TOKEN_KEY_ADMIN = "login:token:admin:";
 
     /**
      * 校验jwt
@@ -48,6 +54,15 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
             log.info("当前员工id：{}", empId);
+
+            //校验是否为最新token（唯一登录：新设备登录会使旧token失效）
+            String latestToken = stringRedisTemplate.opsForValue().get(LOGIN_TOKEN_KEY_ADMIN + empId);
+            if (latestToken == null || !latestToken.equals(token)) {
+                log.warn("token已失效（账号在另一设备登录），empId：{}", empId);
+                response.setStatus(401);
+                return false;
+            }
+
             BaseContext.setCurrentId(empId);
             //3、通过，放行
             return true;

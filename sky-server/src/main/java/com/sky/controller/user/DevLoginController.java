@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 开发环境模拟登录接口。
@@ -47,6 +49,11 @@ public class DevLoginController {
     @Autowired
     private JwtProperties jwtProperties;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    private static final String LOGIN_TOKEN_KEY_USER = "login:token:user:";
+
     /**
      * 模拟登录
      *
@@ -68,6 +75,10 @@ public class DevLoginController {
                 jwtProperties.getUserSecretKey(),
                 jwtProperties.getUserTtl(),
                 claims);
+
+        //将token存入Redis，实现唯一登录（新设备登录会使旧token失效）
+        String key = LOGIN_TOKEN_KEY_USER + user.getId();
+        stringRedisTemplate.opsForValue().set(key, token, jwtProperties.getUserTtl(), TimeUnit.MILLISECONDS);
 
         UserLoginVO userLoginVO = UserLoginVO.builder()
                 .id(user.getId())

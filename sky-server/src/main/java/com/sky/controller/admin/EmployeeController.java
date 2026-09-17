@@ -1,6 +1,7 @@
 package com.sky.controller.admin;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
@@ -16,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 员工管理
@@ -41,6 +44,10 @@ public class EmployeeController {
     private EmployeeService employeeService;
     @Autowired
     private JwtProperties jwtProperties;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    private static final String LOGIN_TOKEN_KEY_ADMIN = "login:token:admin:";
 
     /**
      * 登录
@@ -63,6 +70,10 @@ public class EmployeeController {
                 jwtProperties.getAdminTtl(),
                 claims);
 
+        //将token存入Redis，实现唯一登录（新设备登录会使旧token失效）
+        String key = LOGIN_TOKEN_KEY_ADMIN + employee.getId();
+        stringRedisTemplate.opsForValue().set(key, token, jwtProperties.getAdminTtl(), TimeUnit.MILLISECONDS);
+
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 .id(employee.getId())
                 .userName(employee.getUsername())
@@ -81,6 +92,11 @@ public class EmployeeController {
     @PostMapping("/logout")
     @ApiOperation("员工退出")
     public Result<String> logout() {
+        //删除Redis中的token，退出登录
+        Long empId = BaseContext.getCurrentId();
+        if (empId != null) {
+            stringRedisTemplate.delete(LOGIN_TOKEN_KEY_ADMIN + empId);
+        }
         return Result.success();
     }
 
