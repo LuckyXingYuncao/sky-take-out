@@ -22,6 +22,11 @@ public class UserServiceImpl implements UserService {
 
     public static final String WX_LOGIN_URL = "https://api.weixin.qq.com/sns/jscode2session?appid={appid}&secret={secret}&js_code={code}&grant_type=authorization_code";
 
+    /**
+     * 开发环境模拟登录使用的默认 openid
+     */
+    public static final String DEFAULT_DEV_OPENID = "dev_openid_001";
+
     @Autowired
     private WeChatProperties weChatProperties;
     @Autowired
@@ -70,6 +75,33 @@ public class UserServiceImpl implements UserService {
             log.info("新用户注册成功，id：{}", user.getId());
         }
 
+        return user;
+    }
+
+    /**
+     * 开发环境模拟登录：不调用微信服务器，直接用传入的 openid 查库，没有就自动注册
+     *
+     * @param openid 模拟的 openid
+     * @return
+     */
+    @Override
+    public User devLogin(String openid) {
+        String finalOpenid = (openid == null || openid.trim().isEmpty())
+                ? DEFAULT_DEV_OPENID
+                : openid.trim();
+        log.info("【开发登录】使用 openid：{}", finalOpenid);
+
+        User user = userMapper.getByOpenid(finalOpenid);
+        if (user == null) {
+            user = User.builder()
+                    .openid(finalOpenid)
+                    .createTime(LocalDateTime.now())
+                    .build();
+            userMapper.insert(user);
+            log.info("【开发登录】新用户注册成功，id：{}", user.getId());
+        } else {
+            log.info("【开发登录】老用户登录，id：{}", user.getId());
+        }
         return user;
     }
 }

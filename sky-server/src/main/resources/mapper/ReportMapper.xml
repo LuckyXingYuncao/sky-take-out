@@ -5,34 +5,34 @@
 
     <select id="getTurnoverStatistics" resultType="java.util.HashMap">
         SELECT
-            DATE(order_time) AS orderDate,
+            DATE_FORMAT(order_time, '%Y-%m-%d') AS orderDate,
             IFNULL(SUM(amount), 0) AS turnover
         FROM orders
         WHERE status = 5
         AND order_time BETWEEN #{begin} AND #{end}
-        GROUP BY DATE(order_time)
+        GROUP BY DATE_FORMAT(order_time, '%Y-%m-%d')
         ORDER BY orderDate
     </select>
 
     <select id="getOrderStatistics" resultType="java.util.HashMap">
         SELECT
-            DATE(order_time) AS orderDate,
+            DATE_FORMAT(order_time, '%Y-%m-%d') AS orderDate,
             COUNT(*) AS totalOrderCount,
             IFNULL(SUM(CASE WHEN status = 5 THEN 1 ELSE 0 END), 0) AS validOrderCount
         FROM orders
         WHERE order_time BETWEEN #{begin} AND #{end}
-        GROUP BY DATE(order_time)
+        GROUP BY DATE_FORMAT(order_time, '%Y-%m-%d')
         ORDER BY orderDate
     </select>
 
     <select id="getUserStatistics" resultType="java.util.HashMap">
         SELECT
-            DATE(create_time) AS userDate,
+            DATE_FORMAT(create_time, '%Y-%m-%d') AS userDate,
             COUNT(*) AS totalUserCount,
             IFNULL(SUM(CASE WHEN DATE(create_time) = DATE(#{begin}) THEN 1 ELSE 0 END), 0) AS newUserCount
         FROM `user`
         WHERE create_time &lt;= #{end}
-        GROUP BY DATE(create_time)
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d')
         ORDER BY userDate
     </select>
 

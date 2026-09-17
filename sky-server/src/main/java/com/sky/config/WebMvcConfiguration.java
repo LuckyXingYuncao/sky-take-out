@@ -52,6 +52,8 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addInterceptor(jwtTokenUserInterceptor)
                 .addPathPatterns("/user/**")
                 .excludePathPatterns("/user/user/login")
+                // 开发环境模拟登录，同样不需要携带令牌（该控制器仅在 dev profile 下存在）
+                .excludePathPatterns("/user/user/dev-login")
                 .excludePathPatterns("/user/shop/status");
     }
 
@@ -62,9 +64,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public Docket docket() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("苍穹外卖项目接口文档")
+                .title("食光外卖平台项目接口文档")
                 .version("2.0")
-                .description("苍穹外卖项目接口文档")
+                .description("食光外卖平台项目接口文档")
                 .build();
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)
