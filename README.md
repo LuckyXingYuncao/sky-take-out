@@ -1,4 +1,4 @@
-# 🍜 食光外卖平台 (Sky Take-Out)
+# 🍜  Sky Take-Out
 
 一个基于 Spring Boot 的外卖点餐平台后端系统，支持管理端和用户端双端业务。
 
@@ -101,14 +101,6 @@ mvn clean install -DskipTests
 cd sky-server
 mvn spring-boot:run
 ```
-
-### 4. 访问
-
-| 入口 | 地址 |
-|------|------|
-| API 文档 | http://localhost:8080/doc.html |
-| 管理端登录 | http://localhost:8080/admin/employee/login |
-| 管理端默认账号 | admin / 123456 |
 
 ---
 
