@@ -35,8 +35,11 @@ public class CommonController {
 
         try {
             String originalFilename = file.getOriginalFilename();
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String objectName = UUID.randomUUID().toString() + extension;
+            String extension = null;
+            if (originalFilename != null) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String objectName = UUID.randomUUID() + extension;
 
             File dir = new File(uploadPath);
             if (!dir.exists()) {

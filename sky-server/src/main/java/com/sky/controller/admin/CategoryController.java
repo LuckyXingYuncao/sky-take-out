@@ -99,7 +99,7 @@ public class CategoryController {
      */
     @DeleteMapping("/{id}")
     @ApiOperation("根据ID删除分类")
-    public Result<String> deleteById(Long id) {
+    public Result<String> deleteById(@PathVariable Long id) {
         log.info("删除分类：id={}", id);
         categoryService.deleteById(id);
         return Result.success();

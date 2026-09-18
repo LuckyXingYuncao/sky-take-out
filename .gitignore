@@ -11,3 +11,7 @@ logs/
 **/logs/
 # 敏感配置文件
 application-dev.yml
+# 临时笔记
+query
+*.tmp
+*.temp

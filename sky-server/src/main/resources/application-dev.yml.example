@@ -7,8 +7,19 @@ sky:
     username: root
     password: root
   upload:
-    path: C:/Users/lucky/Desktop/后端项目/sky-take-out/uploads/
+    path: ./uploads/
     base-url: http://localhost:8080
   wechat:
     appid: ${WECHAT_APPID}
     secret: ${WECHAT_SECRET}
+
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: false
